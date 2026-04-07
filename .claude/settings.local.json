@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find /Users/tazrinkhalid/Downloads/Projects/CF -type f \\\\\\(-name *.tsx -o -name *.ts -o -name *.jsx -o -name *.js -o -name *.json \\\\\\))"
-    ]
-  }
-}
