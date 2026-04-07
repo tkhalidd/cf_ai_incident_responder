@@ -1,0 +1,25 @@
+name = "cf-ai-incident-responder"
+main = "src/index.ts"
+compatibility_date = "2025-03-07"
+compatibility_flags = ["nodejs_compat"]
+
+[ai]
+binding = "AI"
+
+[[durable_objects.bindings]]
+name = "INCIDENT_AGENT"
+class_name = "IncidentAgent"
+
+[[durable_objects.bindings]]
+name = "INCIDENT_MEMORY"
+class_name = "IncidentMemory"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["IncidentAgent", "IncidentMemory"]
+
+[[workflows]]
+name = "incident-remediation"
+binding = "REMEDIATION_WORKFLOW"
+class_name = "RemediationWorkflow"
+

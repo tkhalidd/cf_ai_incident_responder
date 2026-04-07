@@ -1,0 +1,19 @@
+{
+  "name": "cf_ai_incident_responder",
+  "version": "1.0.0",
+  "description": "AI-powered SRE incident response agent on Cloudflare",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "cf-typegen": "wrangler types"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241218.0",
+    "typescript": "^5.5.2",
+    "wrangler": "^3.99.0"
+  },
+  "dependencies": {
+    "agents": "^0.0.72"
+  }
+}

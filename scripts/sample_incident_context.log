@@ -1,0 +1,68 @@
+--- INCIDENT CONTEXT DUMP ---
+Generated: 2026-04-06T21:00:00Z
+Service: api-gateway / db-primary
+Environment: production
+
+=== ERROR LOGS (last 15 min) ===
+[21:00:12] ERROR  [api-gateway] ConnectionPoolTimeoutError: Unable to acquire connection within 5000ms
+[21:00:12] ERROR  [api-gateway] at Pool.acquire (/app/node_modules/pg-pool/index.js:188)
+[21:00:13] ERROR  [api-gateway] POST /api/orders 503 Service Unavailable (12341ms)
+[21:00:13] ERROR  [api-gateway] ConnectionPoolTimeoutError: Unable to acquire connection within 5000ms
+[21:00:14] ERROR  [api-gateway] GET /api/users/profile 503 Service Unavailable (10234ms)
+[21:00:15] WARN   [api-gateway] Connection pool utilization at 100% (20/20 connections in use)
+[21:00:18] ERROR  [api-gateway] ConnectionPoolTimeoutError: Unable to acquire connection within 5000ms
+[21:00:21] ERROR  [api-gateway] ConnectionPoolTimeoutError: Unable to acquire connection within 5000ms
+[20:58:44] INFO   [deploy-bot] Deployed api-gateway v2.4.1 to production (commit: a3f92c1)
+[20:58:50] INFO   [api-gateway] Server started, pool max=20, idle timeout=10000ms
+[20:59:01] INFO   [api-gateway] Health check OK
+[21:00:09] WARN   [api-gateway] Connection pool at 80% capacity (16/20)
+[21:00:11] WARN   [api-gateway] Connection pool at 95% capacity (19/20)
+
+=== METRICS SNAPSHOT ===
+Timestamp: 2026-04-06T21:00:30Z
+
+db_pool_size:             20
+db_pool_active:           20      ← maxed out
+db_pool_idle:             0
+db_pool_waiting:          47      ← 47 requests queued waiting for a connection
+db_pool_timeout_total:    134     ← 134 timeouts in last 10 min
+
+api_request_rate:         312 req/s   (baseline: 290 req/s) ← normal traffic
+api_error_rate_5xx:       67%         (baseline: 0.1%)
+api_p99_latency_ms:       11240       (baseline: 45ms)
+
+postgres_active_queries:  20
+postgres_idle_in_txn:     18         ← 18 connections idle-in-transaction (suspicious)
+postgres_max_connections: 100
+postgres_cpu_percent:     12         ← DB itself is fine, not under load
+
+app_cpu_percent:          34         ← normal
+app_memory_mb:            512        ← normal
+app_heap_used_mb:         198        ← normal
+
+=== RECENT DEPLOYS ===
+2026-04-06 20:58:44  api-gateway  v2.4.1  (CURRENT)  commit: a3f92c1
+2026-04-06 14:22:11  api-gateway  v2.4.0  commit: 9d3b441
+2026-04-05 09:15:03  db-primary   config  max_connections bumped 80→100
+
+=== CHANGELOG v2.4.0 → v2.4.1 ===
+- feat: wrap failed payment transactions in try/catch
+- fix: retry logic for order creation on network errors  
+- chore: upgrade pg-pool 3.5.2 → 3.6.0
+
+=== POSTGRES ACTIVE QUERIES (pg_stat_activity) ===
+pid   | state              | duration | query
+------|--------------------|---------|-----------------------------------------
+1841  | idle in transaction| 00:08:32 | BEGIN
+1842  | idle in transaction| 00:08:31 | BEGIN
+1843  | idle in transaction| 00:08:30 | BEGIN
+1844  | idle in transaction| 00:08:29 | BEGIN
+1845  | idle in transaction| 00:08:28 | BEGIN
+...   (18 connections all showing idle in transaction, all started ~20:52 UTC)
+
+=== ON-CALL NOTES ===
+- Rollback to v2.4.0 attempted but not yet completed — waiting for approval
+- No DB failover triggered, replica lag is 0ms, DB is healthy
+- Traffic is normal, this is NOT a traffic spike
+- Payment service is downstream and also seeing elevated errors
+- Last successful deploy before this: v2.4.0 at 14:22 UTC today, no issues
