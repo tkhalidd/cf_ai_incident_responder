@@ -1,4 +1,4 @@
-# cf_ai_incident_responder
+# SRE-Copilot
 
 > An AI-powered SRE incident response agent built entirely on Cloudflare — Llama 3.3 on Workers AI, Cloudflare Workflows, Durable Objects with SQLite, and WebSocket chat.
 
@@ -8,7 +8,7 @@
 
 Production incidents are chaotic. Engineers lose precious MTTA (mean-time-to-acknowledge) piecing together context across Slack threads, runbooks, and tribal knowledge that lives only in people's heads.
 
-**cf_ai_incident_responder** is a stateful AI agent that acts as a senior SRE co-pilot the moment an incident is opened:
+**SRE-Copilot** is a stateful AI agent that acts as a senior SRE co-pilot the moment an incident is opened:
 
 1. **Automated triage pipeline** — a Cloudflare Workflow runs three sequential LLM steps (triage → diagnosis → runbook) with per-step retry, durable execution, and automatic callout back to the incident agent when complete.
 2. **Interactive chat** — engineers talk to the agent in real time via WebSocket while the workflow runs. The AI has full incident context, streaming tokens as fast as Llama 3.3 produces them.
@@ -57,7 +57,7 @@ Browser (WebSocket + REST)
 ## Project structure
 
 ```
-cf_ai_incident_responder/
+SRE-Copilot/
 ├── src/
 │   ├── index.ts        # Worker entry point — routing + inline HTML/JS UI
 │   ├── agent.ts        # IncidentAgent Durable Object
@@ -87,8 +87,8 @@ cf_ai_incident_responder/
 ### Install
 
 ```bash
-git clone https://github.com/<your-username>/cf_ai_incident_responder
-cd cf_ai_incident_responder
+git clone https://github.com/<your-username>/SRE-Copilot
+cd SRE-Copilot
 npm install
 ```
 
